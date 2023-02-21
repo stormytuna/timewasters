@@ -35,3 +35,7 @@ Largest issue here will probably be making cards draggable and snapping to piles
 Obviously don't make it 1 word per day
 
 Maybe let people change how big the word can be? guessing 4-10 characters might be pretty cool? https://dictionaryapi.dev/ this API seems useful for it
+
+### Snake
+
+Pretty simple, also did want to do this standalone anyways so may as well throw it in here. Only issue is reading inputs but i doubt that's hard
