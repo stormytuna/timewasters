@@ -1,0 +1,7 @@
+.InputGroup {
+    width: 250px;
+}
+
+input[type=number] {
+    -moz-appearance: textfield;
+}
