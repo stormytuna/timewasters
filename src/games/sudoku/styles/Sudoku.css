@@ -1,0 +1,6 @@
+.SudokuCell {
+  padding: 5px;
+  background-color: pink;
+  width: 30;
+  height: 30;
+}
