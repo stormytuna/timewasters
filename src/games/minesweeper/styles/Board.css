@@ -1,0 +1,4 @@
+.Board {
+  width: fit-content;
+  border: 10px outset rgb(163, 163, 163);
+}

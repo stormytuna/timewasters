@@ -1,0 +1,9 @@
+.Cell {
+  width: 30px;
+  height: 30px;
+}
+
+.Cell img {
+  width: 100%;
+  height: auto;
+}
