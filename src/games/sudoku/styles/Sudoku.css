@@ -23,7 +23,7 @@
   caret-color: transparent;
 }
 
-.SudokuCell:disabled {
-  cursor: default;
-  background-color: black;
+.SudokuCell input[type="text"]:disabled {
+  color: black;
+  font-weight: 800;
 }

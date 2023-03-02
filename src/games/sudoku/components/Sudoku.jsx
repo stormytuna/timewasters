@@ -28,7 +28,6 @@ export function Sudoku() {
       for (let j = 0; j < 9; j++) {
         if (sudokuValues[i][j] === "" || sudokuValues[i][j] !== answerBoard[i][j]) {
           boardsMatch = false;
-          console.log(`Error: ${sudokuValues[i][j]} is not ${answerBoard[i][j]}`);
         }
       }
     }
@@ -39,12 +38,11 @@ export function Sudoku() {
   }, [sudokuBoard]);
 
   function updateCell(row, column, newValue) {
-    setSudokuBoard((curSudokuBoard) => {
-      const newSudokuBoard = deepClone(curSudokuBoard);
-      if (!newSudokuBoard[row][column].disabled) {
-        newSudokuBoard[row][column].value = newValue;
-      }
-    });
+    const newSudokuBoard = deepClone(sudokuBoard);
+    if (!newSudokuBoard[row][column].disabled) {
+      newSudokuBoard[row][column].value = newValue;
+    }
+    setSudokuBoard(newSudokuBoard);
   }
 
   return (

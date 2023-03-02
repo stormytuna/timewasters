@@ -35,7 +35,7 @@ export function createSudokuBoard() {
         x: rowIndex,
         y: columnIndex,
         value: value === null ? "" : value + 1,
-        disabled: value !== "",
+        disabled: value !== null,
       };
     })
   );

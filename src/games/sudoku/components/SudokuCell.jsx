@@ -61,8 +61,8 @@ export function SudokuCell({ x, y, value, disabled, updateCell }) {
   }
 
   return (
-    <div className="SudokuCell" style={styles} disabled={disabled}>
-      <input type="text" onKeyUp={handleInput} value={displayValue} />
+    <div className="SudokuCell" style={styles}>
+      <input type="text" onKeyUp={handleInput} value={displayValue} disabled={disabled} />
     </div>
   );
 }
