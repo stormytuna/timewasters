@@ -13,12 +13,17 @@
   background-color: inherit;
 }
 
-.SudokuCell input[type=number]:hover {
+.SudokuCell input[type="text"]:hover {
   cursor: pointer;
 }
 
-.SudokuCell input[type=number]:focus {
+.SudokuCell input[type="text"]:focus {
   outline: 0px;
   border: 3px solid orange;
   caret-color: transparent;
+}
+
+.SudokuCell:disabled {
+  cursor: default;
+  background-color: black;
 }

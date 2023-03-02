@@ -1,36 +1,47 @@
-import { deepClone } from "../../../utils/deepClone";
-import { shuffle } from "./shuffle";
+import { makepuzzle, solvepuzzle } from "sudoku";
 
 export function createSudokuBoard() {
-	// Generate a solved grid
-	// First, generate a single row
-	const sudokuValues = [];
-	sudokuValues[0] = shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9]);
-	// Now generate more rows by using this row with an offset
-	for (let i = 1; i < 9; i++) {
-		const offset = i % 3 === 0 ? 1 : 3; // Rows at i=3 and i=6 should only be offset once
+  // Generate our source grids using the sudoku library
+  const puzzle = makepuzzle();
+  const solvedPuzzle = solvepuzzle(puzzle);
 
-		const seedRow = deepClone(sudokuValues[i - 1]);
-		for (let j = 0; j < offset; j++) {
-			const temp = seedRow.shift();
-			seedRow.push(temp);
-		}
+  // Map them into jagged arrays
+  const jaggedPuzzle = [];
+  for (let i = 0; i < 9; i++) {
+    const row = [];
+    for (let j = 0; j < 9; j++) {
+      const offset = i * 9;
+      const nextIndex = offset + j;
+      row.push(puzzle[nextIndex]);
+    }
+    jaggedPuzzle.push(row);
+  }
 
-		sudokuValues[i] = seedRow;
-	}
+  const jaggedSolvedPuzzle = [];
+  for (let i = 0; i < 9; i++) {
+    const row = [];
+    for (let j = 0; j < 9; j++) {
+      const offset = i * 9;
+      const nextIndex = offset + j;
+      row.push(solvedPuzzle[nextIndex]);
+    }
+    jaggedSolvedPuzzle.push(row);
+  }
 
-	// Then we map our values into our actual board
-	const sudokuBoard = sudokuValues.map((row, rowIndex) => {
-		return row.map((value, columnIndex) => {
-			{
-				return {
-					value,
-					x: rowIndex,
-					y: columnIndex,
-				};
-			}
-		});
-	});
+  // Map our them into usable arrays
+  const usablePuzzle = jaggedPuzzle.map((row, rowIndex) =>
+    row.map((value, columnIndex) => {
+      return {
+        x: rowIndex,
+        y: columnIndex,
+        value: value === null ? "" : value + 1,
+        disabled: value !== "",
+      };
+    })
+  );
 
-  return sudokuBoard;
+  const usableSolvedPuzzle = jaggedSolvedPuzzle.map((row) => row.map((value) => (value === null ? "" : value + 1)));
+
+  // Return our puzzle and our answer
+  return [usablePuzzle, usableSolvedPuzzle];
 }
