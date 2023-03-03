@@ -1,3 +1,4 @@
+import JSConfetti from "js-confetti";
 import { useEffect, useState } from "react";
 import { useStopwatch } from "react-timer-hook";
 import { deepClone } from "../../../utils/deepClone";
