@@ -3,59 +3,85 @@ import { useEffect, useState } from "react";
 import { createSudokuBoard } from "../utils/create-sudoku-board";
 import { SudokuCell } from "./SudokuCell";
 import { deepClone } from "../../../utils/deepClone";
+import { GameBar } from "./GameBar";
+import JSConfetti from "js-confetti";
 
 export function Sudoku() {
-  const [sudokuBoard, setSudokuBoard] = useState([]);
-  const [answerBoard, setAnswerBoard] = useState([]);
+	const [sudokuBoard, setSudokuBoard] = useState([]);
+	const [answerBoard, setAnswerBoard] = useState([]);
+	const [wonGame, setWonGame] = useState(false);
 
-  useEffect(() => {
-    const [newSudokuBoard, newAnswerBoard] = createSudokuBoard();
-    setSudokuBoard(newSudokuBoard);
-    setAnswerBoard(newAnswerBoard);
-  }, []);
+	useEffect(() => {
+		resetGame();
+	}, []);
 
-  useEffect(() => {
-    // Check if our sudoku board actually has values
-    if (sudokuBoard.length < 9) {
-      return;
-    }
+	useEffect(() => {
+		// Check if our sudoku board actually has values
+		if (sudokuBoard.length < 9) {
+			return;
+		}
 
-    // Check if we've won
-    const sudokuValues = sudokuBoard.map((row) => row.map((cell) => cell.value));
+		// Check if we've won
+		const sudokuValues = sudokuBoard.map((row) => row.map((cell) => cell.value));
 
-    let boardsMatch = true;
-    for (let i = 0; i < 9; i++) {
-      for (let j = 0; j < 9; j++) {
-        if (sudokuValues[i][j] === "" || sudokuValues[i][j] !== answerBoard[i][j]) {
-          boardsMatch = false;
-        }
-      }
-    }
+		let boardsMatch = true;
+		for (let i = 0; i < 9; i++) {
+			for (let j = 0; j < 9; j++) {
+				if (sudokuValues[i][j] === "" || sudokuValues[i][j] !== answerBoard[i][j]) {
+					boardsMatch = false;
+				}
+			}
+		}
 
-    if (boardsMatch) {
-      console.log("Victory!!");
-    }
-  }, [sudokuBoard]);
+		if (boardsMatch && !wonGame) {
+			// If our current board matches the answer board, we've won the game
 
-  function updateCell(row, column, newValue) {
-    const newSudokuBoard = deepClone(sudokuBoard);
-    if (!newSudokuBoard[row][column].disabled) {
-      newSudokuBoard[row][column].value = newValue;
-    }
-    setSudokuBoard(newSudokuBoard);
-  }
+			// Disable ALL of our cells
+			let newSudokuBoard = deepClone(sudokuBoard);
+			newSudokuBoard = newSudokuBoard.map((row) =>
+				row.map((cell) => {
+					const newCell = deepClone(cell);
+					newCell.disabled = true;
+					return newCell;
+				})
+			);
+			setSudokuBoard(newSudokuBoard);
 
-  return (
-    <div className="Sudoku m-auto">
-      {sudokuBoard.map((row) => {
-        return (
-          <div className="sudoku-row d-flex justify-content-center">
-            {row.map((cell) => {
-              return <SudokuCell className="sudoku-cell" {...cell} updateCell={updateCell} />;
-            })}
-          </div>
-        );
-      })}
-    </div>
-  );
+			// Confetti
+			const confetti = new JSConfetti();
+			confetti.addConfetti();
+
+			// Set wonGame
+			setWonGame(true);
+		}
+	}, [sudokuBoard]);
+
+	function updateCell(row, column, newValue) {
+		const newSudokuBoard = deepClone(sudokuBoard);
+		if (!newSudokuBoard[row][column].disabled) {
+			newSudokuBoard[row][column].value = newValue;
+		}
+		setSudokuBoard(newSudokuBoard);
+	}
+
+	function resetGame() {
+		const [newSudokuBoard, newAnswerBoard] = createSudokuBoard();
+		setSudokuBoard(newSudokuBoard);
+		setAnswerBoard(newAnswerBoard);
+	}
+
+	return (
+		<div className="Sudoku m-auto p-4">
+			<GameBar resetGame={resetGame} />
+			{sudokuBoard.map((row) => {
+				return (
+					<div className="sudoku-row d-flex justify-content-center">
+						{row.map((cell) => {
+							return <SudokuCell className="sudoku-cell" {...cell} updateCell={updateCell} />;
+						})}
+					</div>
+				);
+			})}
+		</div>
+	);
 }
