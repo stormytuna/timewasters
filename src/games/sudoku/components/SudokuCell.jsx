@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-export function SudokuCell({ x, y, value, disabled, updateCell }) {
+export function SudokuCell({ x, y, value, disabled, updateCell, startStopwatch }) {
 	const [styles, setStyles] = useState({});
 
 	// Making borders programatically here, not sure how to do it in CSS
@@ -55,6 +55,9 @@ export function SudokuCell({ x, y, value, disabled, updateCell }) {
 		if (keyPressed) {
 			updateCell(x, y, keyPressed);
 		}
+
+		// Start our stopwatch
+		startStopwatch();
 	}
 
 	return (

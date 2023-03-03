@@ -5,11 +5,13 @@ import { SudokuCell } from "./SudokuCell";
 import { deepClone } from "../../../utils/deepClone";
 import { GameBar } from "./GameBar";
 import JSConfetti from "js-confetti";
+import { useStopwatch } from "react-timer-hook";
 
 export function Sudoku() {
 	const [sudokuBoard, setSudokuBoard] = useState([]);
 	const [answerBoard, setAnswerBoard] = useState([]);
 	const [wonGame, setWonGame] = useState(false);
+	const { minutes, seconds, isRunning, start, pause, reset } = useStopwatch({ autoStart: false });
 
 	useEffect(() => {
 		resetGame();
@@ -33,9 +35,8 @@ export function Sudoku() {
 			}
 		}
 
+		// If our current board matches the answer board, we've won the game
 		if (boardsMatch && !wonGame) {
-			// If our current board matches the answer board, we've won the game
-
 			// Disable ALL of our cells
 			let newSudokuBoard = deepClone(sudokuBoard);
 			newSudokuBoard = newSudokuBoard.map((row) =>
@@ -50,6 +51,9 @@ export function Sudoku() {
 			// Confetti
 			const confetti = new JSConfetti();
 			confetti.addConfetti();
+
+			// Pause our timer
+			pause();
 
 			// Set wonGame
 			setWonGame(true);
@@ -68,16 +72,27 @@ export function Sudoku() {
 		const [newSudokuBoard, newAnswerBoard] = createSudokuBoard();
 		setSudokuBoard(newSudokuBoard);
 		setAnswerBoard(newAnswerBoard);
+
+		// Reset timer
+		reset();
+		pause();
+	}
+
+	function startStopwatch() {
+		if (!isRunning) {
+			start();
+			reset();
+		}
 	}
 
 	return (
 		<div className="Sudoku m-auto p-4">
-			<GameBar resetGame={resetGame} />
+			<GameBar minutes={minutes} seconds={seconds} resetGame={resetGame} />
 			{sudokuBoard.map((row) => {
 				return (
 					<div className="sudoku-row d-flex justify-content-center">
 						{row.map((cell) => {
-							return <SudokuCell className="sudoku-cell" {...cell} updateCell={updateCell} />;
+							return <SudokuCell className="sudoku-cell" {...cell} updateCell={updateCell} startStopwatch={startStopwatch} />;
 						})}
 					</div>
 				);
