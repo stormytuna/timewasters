@@ -68,6 +68,10 @@ export function Minesweeper() {
 			newGameStats.state = "win";
 			pause();
 			setGameStats(newGameStats);
+
+			// Confetti
+			const confetti = new JSConfetti();
+			confetti.addConfetti();
 		}
 	};
 
